@@ -1,5 +1,9 @@
+#1
 print(" Hello Enter your  name: ")
-name = 'shahar'
+#2
 print(" Hello Enter your address: ")
-address = 'The Button of the Sands'
+
+name = "Name"
 print(" Hello " , name ," How are you: " )
+
+address = 'The Button of the Sands'
