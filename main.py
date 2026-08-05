@@ -1,6 +1,7 @@
 #1
 print(" Hello Enter your  name: ")
 #2
+animal = "Chicken"
 print(" Hello Enter your address: ")
 
 name = "Name"
