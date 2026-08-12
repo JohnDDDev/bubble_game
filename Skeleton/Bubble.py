@@ -39,7 +39,7 @@ def is_colliding_with_wall(bullet_bubble):
 
 def calc_direction(angle):
     # y/x = tan(angle)
-    y_movement = 2
+    y_movement = 10
     x_movement = y_movement / math.tan(math.radians(angle))
     return x_movement, -y_movement
 

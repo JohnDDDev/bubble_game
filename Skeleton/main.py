@@ -4,6 +4,11 @@ import Bubble
 import consts
 import Screen
 import Stack
+import sound
+
+sounds = {
+    'pop': 'bubble_pop.mp3',
+}
 
 state = {
     "original_arrow": Screen.create_arrow(consts.ARROW_IMG),
@@ -22,6 +27,8 @@ state["rotated_arrow"] = state["original_arrow"]
 
 
 def main():
+    global score
+    score = 0
     pygame.init()
     BubblesGrid.create()
     Stack.create(consts.STACK_SIZE)
@@ -35,8 +42,6 @@ def main():
         if state["is_bubble_fired"]:
 
             move_bubble()
-
-            print(state["bullet_bubble"]["center_x"])  #####################
 
             if Bubble.should_stop(BubblesGrid.bubbles_grid,
                                   state["bullet_bubble"]):
@@ -52,6 +57,11 @@ def main():
                         [])
 
                 if BubblesGrid.should_bubbles_pop(same_color_cluster):
+
+                    sound.Play(sounds['pop'],len(same_color_cluster)) #sound
+
+                    score += 500 * len(same_color_cluster)
+
                     state["bubbles_popping"] = \
                         BubblesGrid.pop_bubbles(same_color_cluster)
 
@@ -73,11 +83,18 @@ def main():
 
                 if is_lose():
                     state["state"] = consts.LOSE_STATE
+
+                    #penalty for loosing
+                    score -= 1000
+                    if score < 0:
+                        score = 0
+
                 elif is_win(BubblesGrid.bubbles_grid):
                     state["state"] = consts.WIN_STATE
 
-        Screen.draw_game(state)
+        Screen.draw_game(state,score,highest_score)
 
+    return score
 
 def handle_user_events():
     for event in pygame.event.get():
@@ -102,7 +119,6 @@ def rotate_arrow():
     state["rotated_arrow"] = pygame.transform.rotate(state["original_arrow"],
                                                      state["mouse_angle"] - 90)
 
-
 def fire_bubble():
     state["is_bubble_fired"] = True
     state["bubble_direction"] = \
@@ -119,12 +135,15 @@ def move_bubble():
 
 
 def remove_isolated_bubbles():
+    global score
     isolated_bubbles_locations = BubblesGrid.find_isolated_bubbles()
 
     if len(isolated_bubbles_locations) > 0:
         state["bubbles_popping"] += \
             BubblesGrid.pop_bubbles(isolated_bubbles_locations)
 
+        sound.Play(sounds['pop'],len(isolated_bubbles_locations)) #sound
+        score += 100 * len(isolated_bubbles_locations)
 
 # -----------------------------------------------------------------------------
 # ---------------------------------your code-----------------------------------
@@ -159,10 +178,47 @@ def is_win(bubble_grid) -> bool:
     else:
         return True
 
+def load_highest_score(highest_score_file):
+    highest_score = 0
+
+    try:
+        with open(highest_score_file, 'r') as file:
+            highest_score = file.read()
+    except:
+        print(f"unable To load File : {highest_score_file}")
+
+    return highest_score
+
+def new_high_score(score,highest_score_file):
+    with open(highest_score_file, 'w') as file:
+        file.write(str(score))
+
 # -----------------------------------------------------------------------------
 # ------------------------------your code end----------------------------------
 # -----------------------------------------------------------------------------
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    main()
+    global score
+
+    #loading Highest score
+    highest_score_file = 'highest_score.text'
+    highest_score = load_highest_score(highest_score_file)
+
+    playing = True
+
+    print(f"Highest Score Is : {highest_score}")
+
+    while playing:
+        current_score = main()
+        print(f"Your Score Is : {current_score}")
+
+        if current_score > int(highest_score):
+            new_high_score(current_score,highest_score_file)
+            print(f"New High Score({current_score})!")
+
+        answer = input("would You Like To play Again(y/n)")
+
+        if answer.lower() in ['n','no']:
+            playing = False
+            print("Bye Bye")
