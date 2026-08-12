@@ -1,11 +1,13 @@
 import Stack
-from Skeleton import consts
+import consts
 import pygame
 import math
 import BubblesGrid
 
+
+
 screen = pygame.display.set_mode(
-        (consts.WINDOW_WIDTH, consts.WINDOW_HEIGHT))
+    (consts.WINDOW_WIDTH, consts.WINDOW_HEIGHT))
 
 red = pygame.image.load('images/00.png')
 yellow = pygame.image.load('images/02.png')
@@ -29,6 +31,7 @@ def draw_bubble(bubble):
     screen.blit(colors[f'{bubble["color"]}'],
                 (bubble['center_x']-bubble['radius'],
                         bubble['center_y']-bubble['radius']))
+
 
 def draw_bubbles_popping(bubbles_popping):
     for bubble in bubbles_popping:
@@ -92,6 +95,20 @@ def draw_message(message, font_size, color, location):
 def draw_scores(score,X,Y,msg):
     draw_message(msg, consts.TURNS_FONT_SIZE , consts.TURNS_COLOR,
                  (X,Y))
+
+
+def draw_menu():
+    screen.fill('gray')
+    pygame.display.update()
+    playing = False
+    while not playing:
+       for event in pygame.event.get():
+           if event.type == pygame.QUIT:
+               pygame.quit()
+           if event.type == pygame.KEYDOWN:
+               if event.key == pygame.K_SPACE:
+                   playing = True
+
 
 def draw_game(game_state,score,highest_score):
     screen.fill(consts.BACKGROUND_COLOR)
