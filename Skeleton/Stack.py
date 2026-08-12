@@ -10,16 +10,16 @@ def create(stack_size):
     global stack
     stack = []
     for i in range(stack_size):
-        add_bubble(i)
+        add_bubble(i,consts.bubble_colors)
     return stack
 
 
-def add_bubble(col):
+def add_bubble(col,colors):
     bubble_x = Bubble.calc_center_x(col, row=0,
                                     row_start=consts.STACK_LOCATION[0])
     stack.append(Bubble.create(bubble_x,
                                consts.STACK_LOCATION[1],
-                               random.choice(consts.bubble_colors)))
+                               random.choice(colors))) #consts.bubble_colors
 
 def remove_first():
     bullet_bubble = stack.pop(0)

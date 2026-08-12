@@ -179,19 +179,20 @@ def find_isolated_bubbles():
 # ---------------------------------your code-----------------------------------
 # -----------------------------------------------------------------------------
 def find_bubble_location_in_grid(bullet_bubble):
-    bullet_x = bullet_bubble['center_x']
-    bullet_y = bullet_bubble['center_y']
+    x = bullet_bubble['center_x']
+    y = bullet_bubble['center_y']
+    r = bullet_bubble['radius']
+    gap = consts.SPACE_BETWEEN_COLS
 
-    row = int( bullet_y/ (bullet_bubble['radius'] * 2))
-    col = int( bullet_x / (bullet_bubble['radius'] * 2))
+    print(x)
+    print(y)
+
+    row = int(y//(r*2))
+    col = int( (x) //(r*2+gap))
+
+    if row%2 != 0:
+        col = int( (x-15) //(r*2+gap))
+
     print(row,col)
 
-    if (row+1) % 2 == 0:
-        print('even row')
-        col = int(( bullet_x-15) / (bullet_bubble['radius'] * 2))
-
-    if col==0:
-        col = 1
-
-
-    return row,col-1
+    return row , col

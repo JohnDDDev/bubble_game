@@ -26,7 +26,7 @@ def main():
     BubblesGrid.create()
     Stack.create(consts.STACK_SIZE)
 
-    # bubble_colors = consts.bubble_colors
+    bubble_colors = consts.bubble_colors
 
     while state["is_window_open"]:
 
@@ -36,10 +36,11 @@ def main():
 
             move_bubble()
 
+            print(state["bullet_bubble"]["center_x"])  #####################
+
             if Bubble.should_stop(BubblesGrid.bubbles_grid,
                                   state["bullet_bubble"]):
                 state["is_bubble_fired"] = False
-
                 new_bubble_location = BubblesGrid.find_bubble_location_in_grid(
                         state["bullet_bubble"])
                 BubblesGrid.put_bubble_in_grid(state["bullet_bubble"],
@@ -67,8 +68,8 @@ def main():
 
                 remove_isolated_bubbles()
                 BubblesGrid.set_one_empty_line()
-                remove_extinct_colors(BubblesGrid.bubbles_grid,consts.bubble_colors)
-                Stack.add_bubble(Stack.get_length())
+                remove_extinct_colors(BubblesGrid.bubbles_grid,bubble_colors)
+                Stack.add_bubble(Stack.get_length(),bubble_colors)
 
                 if is_lose():
                     state["state"] = consts.LOSE_STATE
@@ -130,6 +131,9 @@ def remove_isolated_bubbles():
 # -----------------------------------------------------------------------------
 def remove_extinct_colors(grid,bubble_colors):
     presented_colors = set()
+
+    if len(bubble_colors)==1:
+        return
 
     for row in grid:
         for coll in row:
